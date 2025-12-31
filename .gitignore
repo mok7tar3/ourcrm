@@ -1,0 +1,13 @@
+/.idea
+/.vscode
+/vendor/srmklive/paypal/tests/Mocks/samples/sample2.pdf
+/vendor/srmklive/paypal/tests/Mocks/samples/sample.pdf
+composer.lock
+vendor
+.env.production
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/storage/pail

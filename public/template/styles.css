@@ -1,0 +1,610 @@
+/* ========================================
+   Global Styles & Typography
+======================================== */
+
+:root {
+    --primary-color: #008dc3;
+    --primary-hover: #007ab0;
+    --text-dark: #242524;
+    --text-muted: #6d6d6d;
+    --gradient-blue: #7DA5F1;
+    --transition-smooth: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    background: #ffffff;
+}
+
+/* Arabic Font Support */
+body[dir="rtl"],
+[dir="rtl"] * {
+    font-family: 'IBM Plex Sans Arabic', 'Inter', sans-serif;
+}
+
+/* ========================================
+   Gradient Background
+======================================== */
+
+.gradient-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.gradient-background::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    left: 10%;
+    width: 600px;
+    height: 600px;
+    background: var(--gradient-blue);
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.8;
+}
+
+.gradient-background::after {
+    content: '';
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    width: 900px;
+    height: 900px;
+    background: var(--gradient-blue);
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+    .gradient-background::before,
+    .gradient-background::after {
+        width: 400px;
+        height: 400px;
+    }
+}
+
+/* ========================================
+   Navbar Styles
+======================================== */
+
+.navbar {
+    backdrop-filter: blur(10px);
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    z-index: 1000;
+}
+
+.navbar-brand img {
+    transition: var(--transition-smooth);
+}
+
+.navbar-brand:hover img {
+    transform: scale(1.05);
+}
+
+.nav-link {
+    color: var(--text-dark) !important;
+    transition: var(--transition-smooth);
+    font-size: 16px;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--primary-color) !important;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 80%;
+    height: 2px;
+    background: var(--primary-color);
+    transition: transform 0.3s ease;
+}
+
+.nav-link:hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+/* ========================================
+   Hero Section
+======================================== */
+
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-top: 80px;
+}
+
+.min-vh-section {
+    min-height: 70vh;
+}
+
+.hero-title {
+    font-size: clamp(32px, 5vw, 80px);
+    font-weight: 800;
+    line-height: 1.125;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+}
+
+.hero-title .text-primary {
+    color: var(--primary-color) !important;
+}
+
+.cursor {
+    animation: blink 1s infinite;
+    color: var(--primary-color);
+}
+
+@keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+}
+
+.hero-underline {
+    max-width: 479px;
+    height: 26px;
+    opacity: 0;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: all 0.5s ease-out;
+}
+
+.hero-underline.show {
+    opacity: 1;
+    transform: scaleX(1);
+}
+
+[dir="rtl"] .hero-underline {
+    transform-origin: right;
+}
+
+.hero-description {
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 555px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease-out;
+}
+
+.hero-description.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.hero-buttons > * {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.5s ease-out;
+}
+
+.hero-buttons > *.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.cta-button {
+    background: var(--primary-color);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background: var(--primary-hover);
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 141, 195, 0.3);
+}
+
+.cta-button:active {
+    transform: scale(1);
+}
+
+.hero-image {
+    opacity: 0;
+    transform: scale(0.95);
+    transition: all 0.7s ease-out;
+}
+
+.hero-image.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* ========================================
+   Section Titles
+======================================== */
+
+.section-title {
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+/* ========================================
+   Fade-in Animations (Intersection Observer)
+======================================== */
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.6s ease-out;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.fade-in-delay-1 {
+    transition-delay: 0.1s;
+}
+
+.fade-in-delay-2 {
+    transition-delay: 0.2s;
+}
+
+.fade-in-delay-3 {
+    transition-delay: 0.3s;
+}
+
+.fade-in-delay-4 {
+    transition-delay: 0.4s;
+}
+
+.fade-in-delay-5 {
+    transition-delay: 0.5s;
+}
+
+/* ========================================
+   About Section
+======================================== */
+
+.about-section {
+    padding: 80px 0;
+    position: relative;
+    z-index: 1;
+}
+
+.about-image img {
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.about-image img:hover {
+    transform: scale(1.02);
+}
+
+.point-icon {
+    flex-shrink: 0;
+}
+
+/* ========================================
+   How It Works Section
+======================================== */
+
+.how-it-works-section {
+    padding: 80px 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.step-card {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.step-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* ========================================
+   Statistics Section
+======================================== */
+
+.statistics-section {
+    padding: 80px 0;
+}
+
+.stat-card {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-number {
+    font-size: 48px;
+    font-weight: 800;
+    color: var(--primary-color);
+}
+
+.stat-label {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.stats-image img {
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.stats-image img:hover {
+    transform: scale(1.02);
+}
+
+/* ========================================
+   FAQ Section
+======================================== */
+
+.faq-section {
+    padding: 80px 0;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+.accordion-item {
+    border-radius: 12px !important;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    background: white;
+    color: var(--text-dark);
+    font-size: 18px;
+    padding: 1.25rem 1.5rem;
+    border: none;
+}
+
+.accordion-button:not(.collapsed) {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: none;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+    border: none;
+}
+
+.accordion-button::after {
+    transition: transform 0.3s ease;
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* ========================================
+   Ready Section (CTA)
+======================================== */
+
+.ready-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, rgba(0, 141, 195, 0.05) 0%, rgba(125, 165, 241, 0.05) 100%);
+}
+
+/* ========================================
+   Footer
+======================================== */
+
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+.text-light-50 {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.footer a:hover {
+    color: white !important;
+    transform: translateX(5px);
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+[dir="rtl"] .footer a:hover {
+    transform: translateX(-5px);
+}
+
+/* ========================================
+   Buttons
+======================================== */
+
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 40px;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 141, 195, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-outline-secondary:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.05);
+}
+
+/* ========================================
+   RTL Support
+======================================== */
+
+[dir="rtl"] .navbar-nav {
+    margin-right: auto !important;
+    margin-left: 0 !important;
+}
+
+[dir="rtl"] .accordion-button::after {
+    margin-left: 0;
+    margin-right: auto;
+}
+
+[dir="rtl"] .d-flex {
+    direction: rtl;
+}
+
+[dir="rtl"] .text-start {
+    text-align: right !important;
+}
+
+[dir="rtl"] .text-end {
+    text-align: left !important;
+}
+
+/* ========================================
+   Responsive Utilities
+======================================== */
+
+@media (max-width: 991px) {
+    .hero-section {
+        padding-top: 40px;
+    }
+    
+    .section-title {
+        font-size: 36px;
+    }
+    
+    .navbar-collapse {
+        background: white;
+        padding: 1rem;
+        border-radius: 12px;
+        margin-top: 1rem;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 40px;
+    }
+    
+    .hero-description {
+        font-size: 16px;
+    }
+    
+    .stat-number {
+        font-size: 36px;
+    }
+}
+
+/* ========================================
+   Smooth Scrolling
+======================================== */
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* ========================================
+   Loading Animation
+======================================== */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   Utility Classes
+======================================== */
+
+.text-primary {
+    color: var(--primary-color) !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.shadow-custom {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.rounded-custom {
+    border-radius: 20px;
+}
+
+/* ========================================
+   Print Styles
+======================================== */
+
+@media print {
+    .navbar,
+    .gradient-background {
+        display: none;
+    }
+}

@@ -1,0 +1,79 @@
+<form method="POST" class="needs-validation" novalidate action="{{ route('store.login') }}" id="form_data">
+                                    @csrf
+                                    @if (session()->has('info'))
+                                        <div class="alert alert-success">
+                                            {{ session()->get('info') }}
+                                        </div>
+                                    @endif
+                                    @if (session()->has('status'))
+                                        <div class="alert alert-info">
+                                            {{ session()->get('status') }}
+                                        </div>
+                                    @endif
+
+                                    <div class="custom-login-form">
+                                        <div class="form-group mb-3">
+                                            <label for="email" class="form-label d-flex">{{ __('Email') }}</label>
+                                            <input type="text"
+                                                class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}"
+                                                id="email" name="email" placeholder="{{ __('Enter your email') }}"
+                                                required="" value="{{ old('email') }}">
+                                            <div class="invalid-feedback d-block">
+                                                {{ $errors->first('email') }}
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label class="form-label d-flex">{{ __('Password') }}</label>
+                                            <input type="password"
+                                                class="form-control {{ $errors->has('password') ? ' is-invalid' : '' }}"
+                                                id="password" name="password" placeholder="{{ __('Enter Password') }}"
+                                                required="" value="{{ old('password') }}">
+                                            <div class="invalid-feedback d-block">
+                                                {{ $errors->first('password') }}
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-4">
+                                            <div class="d-flex flex-wrap align-items-center justify-content-between">
+
+                                                <!-- <span><a href="{{ route('password.request',$lang) }}"
+                                                        tabindex="0">{{ __('Forgot your password?') }}</a></span> -->
+                                            </div>
+                                        </div>
+                                        {{-- @if (Utility::getSettingValByName('RECAPTCHA_MODULE') == 'yes')
+                                            <div class="form-group mb-4">
+                                                {!! NoCaptcha::display() !!}
+                                                @error('g-recaptcha-response')
+                                                    <span class="small text-danger" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        @endif --}}
+                                        @if (Utility::getSettingValByName('RECAPTCHA_MODULE') == 'yes')
+                                        @if (isset($settings['google_recaptcha_version']) && $settings['google_recaptcha_version'] == 'v2-checkbox')
+                                            <div class="form-group mb-4">
+                                                {!! NoCaptcha::display() !!}
+                                                @error('g-recaptcha-response')
+                                                    <span class="small text-danger" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        @else
+                                            <div class="form-group mb-4">
+                                                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"
+                                                    class="form-control">
+                                                @error('g-recaptcha-response')
+                                                    <span class="error small text-danger" role="alert">
+                                                        <strong>{{ $message }}</strong>
+                                                    </span>
+                                                @enderror
+                                            </div>
+                                        @endif
+                                    @endif
+                                    </form>
+                                <div class="d-grid">
+                                    <button class="btn btn-primary mt-2 login-do-btn"
+                                        id="login_button">{{ __('Login') }}</button>
+                                </div>

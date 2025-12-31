@@ -1,0 +1,80 @@
+@php
+    $setting = App\Models\Utility::settings();
+    // Assuming you have a list of categories to populate the dropdown
+    $categories = \App\Models\Category::all();
+@endphp
+
+<form method="post" class="needs-validation" novalidate action="{{ route('admin.subcategory.store') }}">
+    @csrf
+    <div class="row">
+        @if (isset($setting['is_enabled']) && $setting['is_enabled'] == 'on')
+            <div class="float-end" style="margin-bottom: 15px">
+                <a class="btn btn-primary btn-sm" href="#" data-size="md" data-ajax-popup-over="true" data-url="{{ route('generate', ['category']) }}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Generate') }}" data-title="{{ __('Generate Content with AI') }}">
+                    <i class="fas fa-robot"> {{ __('Generate with AI') }}</i>
+                </a>
+            </div>
+        @endif
+
+        <!-- Category Dropdown -->
+         @php 
+        $title = 'title_'.app()->getLocale();
+        @endphp
+        <div class="form-group col-md-6">
+            <label class="form-label">{{ __('Category') }}</label><x-required></x-required>
+            <div class="col-sm-12 col-md-12">
+                <select name="category_id" class="form-control {{ $errors->has('category_id') ? ' is-invalid' : '' }}" required>
+                    <option value="">{{ __('Select Category') }}</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                            {{ $category->$title }}
+                        </option>
+                    @endforeach
+                </select>
+                <div class="invalid-feedback">
+                    {{ $errors->first('category_id') }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Subcategory Name -->
+        <div class="form-group col-md-6">
+            <label class="form-label">{{ __('Title Ar') }}</label><x-required></x-required>
+            <div class="col-sm-12 col-md-12">
+                <input type="text" placeholder="{{ __('Title Ar') }}" name="title_ar"
+                    class="form-control {{ $errors->has('title_ar') ? ' is-invalid' : '' }}" value="{{ old('title_ar') }}" required>
+                <div class="invalid-feedback">
+                    {{ $errors->first('title_ar') }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label class="form-label">{{ __('Title En') }}</label><x-required></x-required>
+            <div class="col-sm-12 col-md-12">
+                <input type="text" placeholder="{{ __('Title En') }}" name="title_en"
+                    class="form-control {{ $errors->has('title_en') ? ' is-invalid' : '' }}" value="{{ old('title_en') }}" required>
+                <div class="invalid-feedback">
+                    {{ $errors->first('title_en') }}
+                </div>
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+
+            <label for="exampleColorInput" class="form-label">{{ __('Color') }}</label>
+            <div class="col-sm-12 col-md-12">
+                <input name="color" type="color"
+                    class=" form-control  form-control-color {{ $errors->has('color') ? ' is-invalid' : '' }}"
+                    value="255ff7" id="exampleColorInput">
+                <div class="invalid-feedback">
+                    {{ $errors->first('color') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="row">
+        <div class="form-group col-md-12 text-end">
+            <button class="btn btn-primary btn-block btn-submit"><span>{{ __('Add') }}</span></button>
+        </div>
+    </div>
+</form>
