@@ -1,19 +1,28 @@
 @php
+use \App\Models\Utility;
 $setting = App\Models\Settings::colorset();
-$color = 'theme-6';
-if (!empty($setting['color'])) {
-    $color = $setting['color'];
-}
+$getSetting = \App\Models\Utility::getSeoSetting();
+
+$color = !empty($setting['color']) ? $setting['color'] : 'theme-3';
+
+    if(isset($setting['color_flag']) && $setting['color_flag'] == 'true')
+    {
+        $themeColor = 'custom-color';
+    }
+    else {
+        $themeColor = $color;
+    }
+
 $settings = Utility::settings();
-
-$currantLang = 'en';
-
+// $cust_darklayout = $setting['cust_darklayout'];
+$logos = \App\Models\Utility::get_file('uploads/logo/');
+$currantLang = app()->getLocale();
+$SITE_RTL = !empty($setting['SITE_RTL'] ) ? $setting['SITE_RTL']  : 'off';
 @endphp
 
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" dir="{{ $settings['SITE_RTL'] == 'on' ? 'rtl' : '' }}">
-
+<html lang="{{ app()->getLocale() }}" dir="{{ app()->getLocale() === 'ar' ? 'rtl' : 'ltr' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
@@ -22,14 +31,38 @@ $currantLang = 'en';
     <meta name="keywords" content="Dashboard Template" />
     <meta name="author" content="WorkDo" />
 
+    <meta name="title" content="{{$getSetting['meta_keywords']}}">
+    <meta name="description" content="{{$getSetting['meta_description']}}">
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{env('APP_URL')}}">
+    <meta property="og:title" content="{{$getSetting['meta_keywords']}}">
+    <meta property="og:description" content="{{$getSetting['meta_description']}}">
+    <meta property="og:image" content="{{asset('uploads/metaevent/'.$getSetting['meta_image'])}}">
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="{{env('APP_URL')}}">
+    <meta property="twitter:title" content="{{$getSetting['meta_keywords']}}">
+    <meta property="twitter:description" content="{{$getSetting['meta_description']}}">
+    <meta property="twitter:image" content="{{asset('uploads/metaevent/'.$getSetting['meta_image'])}}">
+
+
+
+
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" id="csrf-token" content="{{ csrf_token() }}">
+
+
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+
 
     <title>
         @yield('page-title') - {{ config('app.name', 'Support Ticket') }}
     </title>
-
-    <link rel="shortcut icon" href="{{ asset(Storage::url('logo/favicon.png')) }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    {{-- <link rel="shortcut icon" href="{{ $logos.'favicon.png'}}"> --}}
+    <link rel="shortcut icon" href="{{ $logos . 'favicon.png' }}?timestamp={{ time() }}">
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/style.css') }}">
 
     <!-- font css -->
@@ -37,30 +70,79 @@ $currantLang = 'en';
     <link rel="stylesheet" href="{{ asset('assets/fonts/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/fontawesome.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/fonts/material.css') }}">
+    @if(app()->getLocale() == 'ar')
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body, p, h1, h2, h3, h4, h5, span, h6, a, p, th, td, tr, button {
+            font-family: "Almarai", sans-serif !important;
+        }
+        .almarai-light {
+        font-family: "Almarai", sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        }
 
-    <!-- vendor css -->
-    @if ($settings['SITE_RTL'] == 'on')
-        <link rel="stylesheet" href="{{ asset('assets/css/style-rtl.css') }}" id="main-style-link">
-    @else
-        @if( isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on')
-            <link rel="stylesheet" href="{{ asset('assets/css/style-dark.css') }}">
-        @else
-            <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
-        @endif
-        {{-- <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link"> --}}
+        .almarai-regular {
+        font-family: "Almarai", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        }
+
+        .almarai-bold {
+        font-family: "Almarai", sans-serif;
+        font-weight: 700;
+        font-style: normal;
+        }
+
+        .almarai-extrabold {
+        font-family: "Almarai", sans-serif;
+        font-weight: 800;
+        font-style: normal;
+        }
+
+    </style>
     @endif
+    <style>
+        
+        :root {
+            --color-customColor: <?= $color ?>;
+        }
+    </style>
+    <!-- vendor css -->
+
+    @if (app()->getLocale() == 'ar')
+    <link rel="stylesheet" href="{{ asset('assets/css/style-rtl.css') }}" id="main-style-link">
+    <link rel="stylesheet" href="{{ asset('css/custom-color.css') }}">
+
+    @endif
+
+    @if(isset($setting['cust_darklayout']) && $setting['cust_darklayout'] == 'on')
+    <link rel="stylesheet" href="{{ asset('assets/css/style-dark.css') }}">
+    <style>
+        :root {
+            --color-customColor: <?= $color ?>;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ asset('css/custom-color.css') }}">
+    @else
+        <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}" id="main-style-link">
+        <link rel="stylesheet" href="{{ asset('css/custom-color.css') }}">
+    @endif
+
 
     <link rel="stylesheet" href="{{ asset('assets/css/customizer.css') }}">
 
     <!-- switch button -->
     <link rel="stylesheet" href="{{ asset('assets/css/plugins/bootstrap-switch-button.min.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('public/libs/select2/dist/css/select2.min.css')}}">
     @stack('css-page')
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 
 </head>
 
-<body class="{{ $color }}">
+<body class="{{ $themeColor }}">
 
     <div class="loader-bg">
         <div class="loader-track">
@@ -88,6 +170,24 @@ $currantLang = 'en';
         </div>
     </div>
 
+
+    <div class="modal fade" id="commonModalOver" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="commonModal"></h5>
+                    <a type="button" class="btn-close float-end" data-bs-dismiss="modal" aria-label="Close"></a>
+                </div>
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     <div class="dash-container">
         <div class="dash-content">
             <div class="page-header">
@@ -104,11 +204,17 @@ $currantLang = 'en';
                             </div>
                             <div class="col-md-6 text-right">
                                 @if (trim($__env->yieldContent('action-button')))
-                                    <div class="all-button-box float-end mb-3">
+                                <div class=" " @if (app()->getLocale() == 'ar')style=" float: left !important;"@endif>
+                                    <div class="all-button-box float-end mb-3" style="margin-right: -20px;">
                                         @yield('action-button')
                                     </div>
+                                </div>
                                 @elseif(trim($__env->yieldContent('multiple-action-button')))
-                                    @yield('multiple-action-button')
+                                <div class=" " @if (app()->getLocale() == 'ar')style=" float: left !important;"@endif>
+                                    <div style="margin-right: -20px;" class="d-flex justify-content-end">
+                                        @yield('multiple-action-button')
+                                    </div>
+                                </div>
                                 @endif
                             </div>
                         </div>
@@ -124,6 +230,7 @@ $currantLang = 'en';
     @include('admin.partials.footer')
 
     <script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/choices.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
@@ -133,10 +240,13 @@ $currantLang = 'en';
     <script src="https://js.pusher.com/5.0/pusher.min.js"></script>
 
 
+
     <script src="{{ asset('js/sweetalert.min.js') }}"></script>
     <script src="{{ asset('js/fire.modal.js') }}"></script>
 
     <script src="{{ asset('assets/js/plugins/simple-datatables.js') }}"></script>
+    <script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
+
     <script>
         if($('#pc-dt-simple').length){
             const dataTable = new simpleDatatables.DataTable("#pc-dt-simple");
@@ -144,8 +254,8 @@ $currantLang = 'en';
 
     </script>
 
+<script src="{{ asset('public/libs/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
-
     <!-- switch button -->
     <script src="{{ asset('assets/js/plugins/bootstrap-switch-button.min.js') }}"></script>
 
@@ -273,6 +383,7 @@ $currantLang = 'en';
                 cls = 'danger';
             }
 
+
             $.notify({
                 icon: icon,
                 title: " " + title,
@@ -364,5 +475,5 @@ $currantLang = 'en';
         </script>
     @endif
 </body>
-
+@include('layouts.cookie_consent')
 </html>

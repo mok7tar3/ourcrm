@@ -7,9 +7,9 @@
    @endphp
 
    @if ((isset($settings['cust_theme_bg']) && $settings['cust_theme_bg'] == 'on') || app()->getLocale() == 'ar')
-       <nav class="dash-sidebar light-sidebar transprent-bg" style="direction: rtl; text-align: right;">
+       <nav class="dash-sidebar light-sidebar transprent-bg">
        @else
-           <nav class="dash-sidebar light-sidebar" style="direction: rtl; text-align: right;">
+           <nav class="dash-sidebar light-sidebar">
    @endif
    {{-- <nav class="dash-sidebar light-sidebar {{ (!empty($setting['cust_theme_bg']) && $setting['cust_theme_bg']) == 'off' ? '' : 'transprent-bg' }}"> --}}
    {{-- <nav class="dash-sidebar light-sidebar transprent-bg"> --}}
