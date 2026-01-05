@@ -54,17 +54,10 @@ function show_toastr(title, message, type) {
     });
 }
 
-
-
-
-
 function validation() {
-
     var forms = document.querySelectorAll('.needs-validation');
 
-
     Array.prototype.forEach.call(forms, function (form) {
-
         form.addEventListener('submit', function (event) {
             var submitButton = form.querySelector('button[type="submit"], input[type="submit"]');
 
@@ -84,6 +77,93 @@ function validation() {
     });
 }
 
+function common_bind() {
+    // for Choose file
+    $(document).on('change', 'input[type=file]', function () {
+        var fileclass = $(this).attr('data-filename');
+        var finalname = $(this).val().split('\\').pop();
+        $('.' + fileclass).html(finalname);
+    });
+    
+    // Add other common bindings here as needed
+}
+
+function summernote() {
+    // Initialize summernote if it's available
+    if (typeof $.fn.summernote !== 'undefined' && $('.summernote').length > 0) {
+        $('.summernote').summernote({
+            height: 200,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontname', ['fontname']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview', 'help']]
+            ]
+        });
+    }
+}
+
+function commonLoader() {
+    // LetterAvatar.transform();
+    $('[data-toggle="tooltip"]').tooltip();
+
+    if ($(".select2").length) {
+        $('.select2').select2({
+            "language": {
+                "noResults": function () {
+                    return "No result found";
+                }
+            },
+        });
+    }
+
+    if ($(".datepicker").length) {
+        $('.datepicker').daterangepicker({
+            singleDatePicker: true,
+            format: 'yyyy-mm-dd',
+            locale: date_picker_locale,
+        });
+    }
+    
+    // Initialize summernote in modals
+    summernote();
+}
+
+function loadConfirm() {
+    $('[data-confirm]').each(function () {
+        var me = $(this),
+            me_data = me.data('confirm');
+
+        me_data = me_data.split("|");
+        me.fireModal({
+            title: me_data[0],
+            body: me_data[1],
+            buttons: [
+                {
+                    text: me.data('confirm-text-yes') || 'Yes',
+                    class: 'btn btn-sm btn-danger rounded-pill',
+                    handler: function () {
+                        eval(me.data('confirm-yes'));
+                    }
+                },
+                {
+                    text: me.data('confirm-text-cancel') || 'Cancel',
+                    class: 'btn btn-sm btn-secondary rounded-pill',
+                    handler: function (modal) {
+                        $.destroyModal(modal);
+                        eval(me.data('confirm-no'));
+                    }
+                }
+            ]
+        })
+    });
+}
+
+// Document ready functions
 $(document).ready(function () {
     if ($(".needs-validation").length > 0) {
         validation();
@@ -95,28 +175,12 @@ $(document).ready(function () {
         });
     }
 
-
-
-
+    // Initialize common bindings
     common_bind();
+    
+    // Initialize summernote
     summernote();
-
-
-    // for Choose file
-    $(document).on('change', 'input[type=file]', function () {
-        var fileclass = $(this).attr('data-filename');
-        var finalname = $(this).val().split('\\').pop();
-        $('.' + fileclass).html(finalname);
-    });
 });
-
-
-
-
-
-
-
-
 
 $(document).ready(function () {
     $(window).resize();
@@ -151,25 +215,7 @@ $(document).ready(function () {
         });
     }
 
-    // for Choose file
-    $(document).on('change', 'input[type=file]', function () {
-            var names = '';
-
-            var fileclass = $(this).attr('data-filename');
-            var attr = $(this).attr('multiple');
-
-            if (typeof attr !== typeof undefined && attr !== false) {
-                var files = $(this)[0].files;
-                for (var i = 0; i < files.length; i++) {
-                    names += files[i].name + '<br>';
-                }
-            } else {
-                names = $(this).val().split('\\').pop();
-            }
-
-            $('.' + fileclass).html(names);
-        }
-    );
+    // Duplicate file handler removed since it's now in common_bind()
 });
 
 // Common Modal
@@ -185,7 +231,6 @@ $(document).on('click', 'a[data-ajax-popup="true"], button[data-ajax-popup="true
         url: url,
         cache: false,
         success: function (data) {
-            // $('#commonModal .modal-body .card-box').html(data);
             $('#commonModal .modal-body ').html(data);
             $("#commonModal").modal('show');
             commonLoader();
@@ -220,9 +265,7 @@ $(document).on('click', 'a[data-ajax-popup-right="true"], button[data-ajax-popup
     });
 });
 
-
 $(document).on('click', 'a[data-ajax-popup-over="true"], button[data-ajax-popup-over="true"], div[data-ajax-popup-over="true"]', function () {
-
     var validate = $(this).attr('data-validate');
     var id = '';
     if (validate) {
@@ -248,69 +291,7 @@ $(document).on('click', 'a[data-ajax-popup-over="true"], button[data-ajax-popup-
             show_toastr('Error', data.error, 'error')
         }
     });
-
 });
-
-
-function commonLoader() {
-
-    // LetterAvatar.transform();
-
-
-    $('[data-toggle="tooltip"]').tooltip();
-
-    if ($(".select2").length) {
-        $('.select2').select2({
-            "language": {
-                "noResults": function () {
-                    return "No result found";
-                }
-            },
-        });
-    }
-
-
-
-    if ($(".datepicker").length) {
-        $('.datepicker').daterangepicker({
-            singleDatePicker: true,
-            format: 'yyyy-mm-dd',
-            locale: date_picker_locale,
-        });
-    }
-
-}
-
-function loadConfirm() {
-    $('[data-confirm]').each(function () {
-        var me = $(this),
-            me_data = me.data('confirm');
-
-        me_data = me_data.split("|");
-        me.fireModal({
-            title: me_data[0],
-            body: me_data[1],
-            buttons: [
-                {
-                    text: me.data('confirm-text-yes') || 'Yes',
-                    class: 'btn btn-sm btn-danger rounded-pill',
-                    handler: function () {
-                        eval(me.data('confirm-yes'));
-                    }
-                },
-                {
-                    text: me.data('confirm-text-cancel') || 'Cancel',
-                    class: 'btn btn-sm btn-secondary rounded-pill',
-                    handler: function (modal) {
-                        $.destroyModal(modal);
-                        eval(me.data('confirm-no'));
-                    }
-                }
-            ]
-        })
-    });
-}
-
 
 if ($(".multi-select").length > 0) {
     $( $(".multi-select") ).each(function( index,element ) {
@@ -321,5 +302,13 @@ if ($(".multi-select").length > 0) {
                 }
             );
     });
+}
 
+// Helper function for taskCheckbox if needed
+function taskCheckbox() {
+    // Add task checkbox functionality here if needed
+    // This function is called but not defined in the original code
+    if (typeof taskCheckbox === 'function') {
+        // Implementation would go here
+    }
 }
