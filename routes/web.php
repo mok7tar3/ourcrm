@@ -285,3 +285,8 @@ Route::get('/config-cache', function () {
     return redirect()->back()->with('success', 'Clear Cache successfully.');
 });
 
+
+
+Route::get('/newtheme/{any?}', function () {
+    return file_get_contents(public_path('newtheme/index.html'));
+})->where('any', '.*');
